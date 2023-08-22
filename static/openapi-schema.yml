@@ -1,93 +1,110 @@
 openapi: 3.0.2
 info:
-  title: 'Pass API'
-  version: '0.1'
+  title: 'MountainPass API'
+  description: "Данная версия учебная и не несёт в себе никакой конкретной информации!"
+  version: '1'
 paths:
-  /api/submitData/:
+  /perevall:
     get:
-      summary: Возвращает список перевалов
-      operationId: listPass
-      description: ''
-      parameters: []
+      summary: Перевалы
+      description: 'Возвращает список перевалов. Который можно посмотреть на странице http://127.0.0.1:8000/pereval/ '
+      operationId: listperevall
+      parameters:
+         - $ref: '#/components/schemas/perevall'
       responses:
-        '200':
+        200:
+          description: 'успешно'
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Pass'
-          description: 'Успех'
+                $ref: '#/components/schemas/200'
+        404:
+          description: 'не успешно'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+
+        500:
+          description: 'неправильный ввод данных'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500'
       tags:
-      - pass
+        - perevall
     post:
-      summary: Создает новый перевал
-      operationId: createPass
-      description: ''
+      summary:  новый перевал
+      operationId: createpereval
+      description: 'Создает новфй перевал'
       parameters: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Pass'
+              $ref: '#/components/schemas/perevall'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Pass'
+              $ref: '#/components/schemas/perevall'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Pass'
+              $ref: '#/components/schemas/perevall'
       responses:
-        '200':
+        200 :
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pass'
-          description: 'Успех'
-        '400':
+                $ref: '#/components/schemas/200'
+        404:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pass'
+                $ref: '#/components/schemas/404'
           description: 'Bad request'
-        '500':
+        500 :
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pass'
-          description: 'Ошибка при выполнении операции'
+                $ref: '#/components/schemas/500'
       tags:
-      - pass
-  /api/submitData/{id}/:
+        - perevall
+  /perevall/{id}/:
     get:
-      summary: Возвращает перевал по его ID
+      summary: Поиск по ID
       operationId: retrievePass
-      description: ''
+      description: 'Возвращает перевал по его ID'
       parameters:
       - name: id
         in: path
         required: true
-        description: Уникальное целое число, определяющее этот перевал
+        description: 'Уникальное целое число, определяющее этот перевал'
         schema:
           type: integer
       responses:
-        '200':
+        200 :
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pass'
+                $ref: '#/components/schemas/200'
           description: Успех
-        '400':
-          description: Указан не верный ID (например, не число)
-        '404':
-          description: Перевал с указанным ID не найден
-        'default':
+        404 :
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+            description: Перевал с указанным ID не найден
+        500:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500'
           description: Непредвиденная ошибка
       tags:
-      - pass
+      - perevall
     patch:
-      summary: Частично изменяет перевал c ID
+      summary: Изменение перевала
       operationId: partialUpdatePass
-      description: ''
+      description: 'Частично изменяет перевал c ID'
       parameters:
       - name: id
         in: path
@@ -99,34 +116,40 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Pass'
+              $ref: '#/components/schemas/perevall'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Pass'
+              $ref: '#/components/schemas/perevall'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/Pass'
+              $ref: '#/components/schemas/perevall'
       responses:
-        '200':
+        200 :
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Pass'
+                $ref: '#/components/schemas/200'
           description: Успех
-        '400':
-          description: Указан не верный ID (например, не число)
-        '404':
-          description: Перевал с указанным ID не найден
-        'default':
+        404 :
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+            description: Перевал с указанным ID не найден
+        500:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/500'
           description: Непредвиденная ошибка
       tags:
-      - pass
+      - perevall
 
 components:
   schemas:
-    Passage:
+    perevall:
       type: object
-      title: Pass
+      title: perevall
       description: Перевал
       properties:
         id:
@@ -134,46 +157,42 @@ components:
           format: int64
           description: Уникальное целое число, определяющее этот перевал
           readOnly: true
-        beauty_title:
+        beautyTitle:
           type: string
-          description: Тип, вид объекта (пер., перевал)
-          maxLength: 255
+          description: Тип, вид объекта (перевал, ущелье, плато)
+          enum: [перевал, ущелье, плато]
+          maxLength: 7
         title:
           type: string
           description: Название перевала
-          maxLength: 255
+          maxLength: 150
         other_titles:
           type: string
           description: иные названия
-          maxLength: 255
+          maxLength: 150
         connect:
           type: string
           format: text
-          description: Что связывает
-        author:
-          $ref: '#/components/schemas/Climber'
-        coords:
-          $ref: '#/components/schemas/Coords'
-        level:
+          description: соединяет
+        category:
           $ref: '#/components/schemas/Category'
         images:
-          type: array
-          title: List of images
-          description: Список фотографий перевала
-          items:
-            $ref: '#/components/schemas/Images'
+          $ref: '#/components/schemas/Images'
         add_time:
           type: string
           format: timezone
           description: Дата и время добавления
           readOnly: true
+        coords:
+          $ref: '#/components/schemas/Coordsr'
+        author:
+          $ref: '#/components/schemas/Climber'
         status:
           type: string
+          enum: [new, pending, accepted, rejected]
+          default: new
           maxLength: 8
           description: 'Статус модерации. Допустимые значения: "new", "pending", "accepted", "rejected"'
-      required:
-      - title
-      - author
 
     Climber:
       type: object
@@ -187,65 +206,66 @@ components:
           description: Адрес электронной почты
         fam:
           type: string
-          maxLength: 64
+          maxLength: 30
+          example: Иванов
           description: Фамилия
         name:
           type: string
           maxLength: 30
+          example: Иван
           description: Имя
         otc:
           type: string
           maxLength: 30
+          example: Иваныч
           description: Отчество
         phone:
           type: string
           minLength: 11
           maxLength: 12
+          example: 88002000500
           description: Номер телефона
-      required:
-        - email
-        - fam
-        - name
-        - phone
 
     Coords:
-      type: object
+      type: objects
       title: Coords
       description: Координаты
       properties:
         latitude:
           type: number
           format: float
+          maxLength: 9
+          example: 75.123456
           description: Широта
         longitude:
           type: number
           format: float
+          maxLength: 9
+          example: 75,123456
           description: Долгота
         height:
           type: integer
+          maxLength: 5
+          example: 12345
           description: Высота
 
     Category:
-      type: object
+      type: objects
       title: Category
-      description: Уровни сложности
+      description: 'Уровень сложности для зимы. Допустимые значения: "", "1a", "1b", "2a", "2b", "3a", "3b"'
       properties:
         winter:
           type: string
-          maxLength: 2
-          description: 'Уровень сложности для зимы. Допустимые значения: "", "1a", "1b", "2a", "2b", "3a", "3b"'
+          enum: [1a, 1b, 2a, 2b, 3a, 3b]
         summer:
           type: string
-          maxLength: 2
-          description: 'Уровень сложности для лета. Допустимые значения: "", "1a", "1b", "2a", "2b", "3a", "3b"'
+          enum: [1a, 1b, 2a, 2b, 3a, 3b]
         autumn:
           type: string
-          maxLength: 2
-          description: 'Уровень сложности для осени. Допустимые значения: "", "1a", "1b", "2a", "2b", "3a", "3b"'
+          enum: [1a, 1b, 2a, 2b, 3a, 3b]
         spring:
           type: string
-          maxLength: 2
-          description: 'Уровень сложности для весны. Допустимые значения: "", "1a", "1b", "2a", "2b", "3a", "3b"'
+          enum: [1a, 1b, 2a, 2b, 3a, 3b]
 
     Images:
       type: object
@@ -257,3 +277,31 @@ components:
           description: Название
           maxLength: 50
         data:
+
+  200:
+    description: 'успешно'
+    content:
+      application/json:
+        schema:
+          title: successfully
+          type: object
+          properties:
+            placeholder:
+              type: string
+              description: 'зер гуд вольдемар'
+  404:
+    description: 'не успешно'
+    content:
+      text/plain:
+        schema:
+          title: Not found
+          type: string
+          example: Not found
+  500:
+    description: 'неправильный ввод данных'
+    content:
+      application/json:
+        schema:
+          title: error
+          description: 'Ошибка при выполнении операции'
+
