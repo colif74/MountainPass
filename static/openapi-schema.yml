@@ -9,28 +9,20 @@ paths:
       summary: Перевалы
       description: 'Возвращает список перевалов. Который можно посмотреть на странице http://127.0.0.1:8000/pereval/ '
       operationId: listperevall
-      parameters:
-         - $ref: '#/components/schemas/perevall'
+      parameters: []
       responses:
         '200':
           description: 'успешно'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/200'
-        '404':
-          description: 'не успешно'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/404'
+                title: successfully
+                type: object
+                properties:
+                  placeholder:
+                    type: string
+                    description: 'зер гуд вольдемар'
 
-        '500':
-          description: 'неправильный ввод данных'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/500'
       tags:
         - perevall
     post:
@@ -50,13 +42,16 @@ paths:
             schema:
               $ref: '#/components/schemas/perevall'
       responses:
-        '200' :
-          $ref: '#/components/schemas/200'
-        '404':
-          $ref: '#/components/schemas/404'
-          description: 'Bad request'
-        '500' :
-          $ref: '#/components/schemas/500'
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/perevall'
+          '405':
+            description: Invalid input
+          '400':
+            description: Bad Request
       tags:
         - perevall
   /perevall/{id}/:
@@ -73,16 +68,25 @@ paths:
           type: integer
       responses:
         '200' :
-          $ref: '#/components/schemas/200'
+          $ref: '#/components/schemas/perevall'
           description: Успех
-        '404' :
-           $ref: '#/components/schemas/404'
-           description: Перевал с указанным ID не найден
+        '404':
+          description: 'не успешно'
+          content:
+            text/plain:
+              schema:
+                title: Not found
+                type: string
+                example: Not found
         '500':
-          $ref: '#/components/schemas/500'
-          description: Непредвиденная ошибка
+          description: 'неправильный ввод данных'
+          content:
+            application/json:
+              schema:
+                title: error
+                description: 'Ошибка при выполнении операции'
       tags:
-      - perevall
+        - perevall
     patch:
       summary: Изменение перевала
       operationId: partialUpdatePass
@@ -107,18 +111,13 @@ paths:
               $ref: '#/components/schemas/perevall'
       responses:
         '200' :
-          $ref: '#/components/schemas/200'
+          $ref: '#/components/schemas/perevall'
           description: Успех
         '404' :
-          $ref: '#/components/schemas/404'
           description: Перевал с указанным ID не найден
-        '500':
-           $ref: '#/components/schemas/500'
       tags:
       - perevall
   get:
-    tags:
-      - perevall
     summary: Получить список перевалов с фильтром по почте
     description: submitData/?user__email={email}/
     operationId: findPerevalsByEmail
@@ -129,6 +128,20 @@ paths:
         required: true
         schema:
           type: string
+    respons:
+      '200':
+        description: 'успешно'
+        content:
+          application/json:
+            schema:
+              title: successfully
+              type: object
+              properties:
+                placeholder:
+                  type: string
+                  description: 'зер гуд вольдемар'
+    tags:
+       - perevall
 
 
 components:
@@ -175,7 +188,11 @@ components:
           $ref: '#/components/schemas/Climber'
         status:
           type: string
-          enum: [new, pending, accepted, rejected]
+          enum:
+              - new
+              - pending
+              - accepted
+              - rejected
           default: new
           maxLength: 8
           description: 'Статус модерации. Допустимые значения: "new", "pending", "accepted", "rejected"'
@@ -242,16 +259,26 @@ components:
       properties:
         winter:
           type: string
-          enum: [1a, 1b, 2a, 2b, 3a, 3b]
+          $ref: '#/components/schemas/Level'
         summer:
           type: string
-          enum: [1a, 1b, 2a, 2b, 3a, 3b]
+          $ref: '#/components/schemas/Level'
         autumn:
           type: string
-          enum: [1a, 1b, 2a, 2b, 3a, 3b]
+          $ref: '#/components/schemas/Level'
         spring:
           type: string
-          enum: [1a, 1b, 2a, 2b, 3a, 3b]
+          $ref: '#/components/schemas/Level'
+
+    Level:
+      type: string
+      enum:
+        - 1A
+        - 1B
+        - 2A
+        - 2B
+        - 3A
+        - 3B
 
     Images:
       type: object
@@ -278,19 +305,4 @@ components:
               placeholder:
                 type: string
                 description: 'зер гуд вольдемар'
-    '404':
-      description: 'не успешно'
-      content:
-        text/plain:
-          schema:
-            title: Not found
-            type: string
-            example: Not found
-    '500':
-      description: 'неправильный ввод данных'
-      content:
-        application/json:
-          schema:
-            title: error
-            description: 'Ошибка при выполнении операции'
 
