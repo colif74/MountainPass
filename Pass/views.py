@@ -1,8 +1,4 @@
 import django_filters
-from django.shortcuts import render
-from django.shortcuts import render
-from rest_framework import viewsets
-from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from .serializers import *
@@ -14,21 +10,21 @@ class IndexView(TemplateView):
 
 
 class ClimberViewSet(viewsets.ModelViewSet):
-    queryset = Climber.objects.all()
     serializer_class = ClimberSerializer
+    queryset = Climber.objects.all()
 
 
 class PerevalAddedViewSet(viewsets.ModelViewSet):
-    queryset = PerevalAdded.objects.all()
     serializer_class = PerevalAddedSerializer
+    queryset = PerevalAdded.objects.all()
     filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
-    filterset_fields = ('user__email',)
+    filterset_fields = ('climber__email',)
     http_method_names = ['get', 'post', 'head', 'patch', 'options']
 
     # переопределяем метод, чтобы получить требуемые сообщения по ТЗ
     def create(self, request, *args, **kwargs):
         serializer = PerevalAddedSerializer(data=request.data)
-        print(serializer.is_valid())
+        # print(serializer.is_valid())
         if serializer.is_valid():
             serializer.save()
             return Response(

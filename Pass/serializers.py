@@ -71,14 +71,14 @@ class ImagesSerializer(WritableNestedModelSerializer):
 class PerevalAddedSerializer(WritableNestedModelSerializer):
     coords = CoordsSerializer()
     category = CategorySerializer()
-    user = ClimberSerializer()
+    author = ClimberSerializer()
     images = ImagesSerializer()
 
     class Meta:
         model = PerevalAdded
         depth = 1
         fields = [
-            'pk',
+            'id',
             'beautyTitle',
             'title',
             'other_titles',
@@ -119,16 +119,16 @@ class PerevalAddedSerializer(WritableNestedModelSerializer):
 
     def validate(self, data):
         if self.instance is not None:
-            instance_user = self.instance.user
-            data_user = data.get('user')
-            user_fields_for_validation = [
-                instance_user.fam != data_user['fam'],
-                instance_user.name != data_user['name'],
-                instance_user.otc != data_user['otc'],
-                instance_user.phone != data_user['phone'],
-                instance_user.email != data_user['mail'],
+            instance_author = self.instance.author
+            data_author = data.get('author')
+            author_fields_for_validation = [
+                instance_author.fam != data_author['fam'],
+                instance_author.name != data_author['name'],
+                instance_author.otc != data_author['otc'],
+                instance_author.phone != data_author['phone'],
+                instance_author.email != data_author['mail'],
             ]
-            if data_user is not None and any(user_fields_for_validation):
+            if data_author is not None and any(author_fields_for_validation):
                 raise serializers.ValidationError(
                     {
                         'Отказано': 'Данные пользователя не могут быть изменены',
