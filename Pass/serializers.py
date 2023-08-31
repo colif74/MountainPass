@@ -43,7 +43,7 @@ class ClimberSerializer(serializers.ModelSerializer):
 
     def save(self, **kwargs):
         self.is_valid()
-        user = Climber.objects.filter(email=self.validated_data.get('email'))
+        user = Climber.objects.filter(mail=self.validated_data.get('mail'))
         if user.exists():
             return user.first()
         else:
@@ -97,7 +97,7 @@ class PerevalAddedSerializer(WritableNestedModelSerializer):
         category = validated_data.pop('category')
         images = validated_data.pop('images')
 
-        author_ = Climber.objects.filter(email=author['email'])
+        author_ = Climber.objects.filter(mail=author['mail'])
         if author_.exists():
             author_serializer = ClimberSerializer(data=author)
             author_serializer.is_valid(raise_exception=True)
@@ -107,13 +107,13 @@ class PerevalAddedSerializer(WritableNestedModelSerializer):
 
         coords = Coords.objects.create(**coords)
         category = Category.objects.create(**category)
-        perevall = PerevalAdded.objects.create(**validated_data, images=images,
-                                              author=author, coords=coords, category=category)
+        perevall = PerevalAdded.objects.create(**validated_data, images=images, author=author,
+                                               coords=coords, category=category)
         if images:
             for imag in images:
                 name = imag.pop(name)
-                photo = photo.pop(photo)
-                Images.objects.create(perevall=perevall, name=name, photo=photo)
+                photos = photos.pop(photos)
+                Images.objects.create(perevall=perevall, name=name, photo=photos)
 
         return perevall
 

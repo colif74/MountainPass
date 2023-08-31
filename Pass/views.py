@@ -18,7 +18,7 @@ class PerevalAddedViewSet(viewsets.ModelViewSet):
     serializer_class = PerevalAddedSerializer
     queryset = PerevalAdded.objects.all()
     filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
-    filterset_fields = ('climber__email',)
+    filterset_fields = ('author__email',)
     http_method_names = ['get', 'post', 'head', 'patch', 'options']
 
     # переопределяем метод, чтобы получить требуемые сообщения по ТЗ
@@ -82,9 +82,9 @@ class PerevalAddedViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = PerevalAdded.objects.all()
         perevall_id = self.request.query_params.get('perevall_id', None)
-        climber_id = self.request.query_params.get('climber_id', None)
+        author_id = self.request.query_params.get('author_id', None)
         if perevall_id is not None:
-           queryset = queryset.filter(climber__perevall_id=perevall_id)
-        if climber_id is not None:
-            queryset = queryset.filter(climber_id=climber_id)
+           queryset = queryset.filter(author__perevall_id=perevall_id)
+        if author_id is not None:
+            queryset = queryset.filter(author_id=author_id)
             return queryset
