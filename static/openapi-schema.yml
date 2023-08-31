@@ -4,7 +4,7 @@ info:
   description: "Данная версия учебная и не несёт в себе никакой конкретной информации!"
   version: '1'
 paths:
-  /perevall:
+  /perevall/:
     get:
       summary: Перевалы
       description: 'Возвращает список перевалов. Который можно посмотреть на странице http://127.0.0.1:8000/pereval/ '
@@ -27,7 +27,7 @@ paths:
         - perevall
     post:
       summary:  новый перевал
-      operationId: createpereval
+      operationId: createperevall
       description: 'Создает новфй перевал'
       parameters: []
       requestBody:
@@ -55,9 +55,9 @@ paths:
       tags:
         - perevall
   /perevall/{id}/:
-    get:
+  get:
       summary: Поиск по ID
-      operationId: retrievePass
+      operationId: retrieveperevall
       description: 'Возвращает перевал по его ID'
       parameters:
       - name: id
@@ -87,9 +87,9 @@ paths:
                 description: 'Ошибка при выполнении операции'
       tags:
         - perevall
-    patch:
+  patch:
       summary: Изменение перевала
-      operationId: partialUpdatePass
+      operationId: partialUpdate
       description: 'Частично изменяет перевал c ID'
       parameters:
       - name: id
@@ -117,31 +117,33 @@ paths:
           description: Перевал с указанным ID не найден
       tags:
       - perevall
-  get:
-    summary: Получить список перевалов с фильтром по почте
-    description: submitData/?user__email={email}/
-    operationId: findPerevalsByEmail
-    parameters:
-      - name: email
-        in: query
-        description: Для фильтрации нужна почта.
-        required: true
-        schema:
-          type: string
-    respons:
-      '200':
-        description: 'успешно'
-        content:
-          application/json:
-            schema:
-              title: successfully
-              type: object
-              properties:
-                placeholder:
+
+perevall/?author__email={email}/:
+get:
+      summary: Получить список перевалов с фильтром по почте
+      description: perevall/?author__email={email}/
+      operationId: findPerevalsByEmail
+      parameters:
+              - name: mail
+                in: query
+                description: Для фильтрации нужна почта.
+                required: true
+                schema:
                   type: string
-                  description: 'зер гуд вольдемар'
-    tags:
-       - perevall
+      respons:
+              '200':
+                description: 'успешно'
+                content:
+                  application/json:
+                    schema:
+                      title: successfully
+                      type: object
+                      properties:
+                        placeholder:
+                          type: string
+                          description: 'зер гуд вольдемар'
+      tags:
+         - perevall
 
 
 components:
